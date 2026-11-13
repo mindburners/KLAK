@@ -1,138 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KLAK Firmware & Guides | Mindburner</title>
-<script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
-<style>
-  :root {
-    --bg: #0b0f0c;
-    --panel: #141b16;
-    --line: #24302a;
-    --text: #e6efe8;
-    --muted: #9aaba0;
-    --accent: #39ff88;
-    --accent-dark: #0b3d22;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    line-height: 1.55;
-  }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 32px 16px 48px; }
-  header { text-align: center; margin-bottom: 28px; }
-  .brand { color: var(--muted); letter-spacing: .2em; font-size: 12px; text-transform: uppercase; }
-  h1 {
-    font-size: 64px; margin: 6px 0 4px; letter-spacing: .08em;
-    color: var(--accent); text-shadow: 0 0 18px rgba(57,255,136,.35);
-  }
-  .tag { color: var(--muted); margin: 0; }
-  .card {
-    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
-    padding: 22px; margin-bottom: 18px;
-  }
-  h2 { margin: 0 0 12px; font-size: 20px; color: var(--accent); }
-  .version { font-size: 15px; color: var(--muted); margin-bottom: 16px; }
-  .version b { color: var(--text); }
-  esp-web-install-button button, .btn {
-    display: inline-block; background: var(--accent); color: #04140a; border: 0;
-    border-radius: 8px; padding: 12px 22px; font-weight: 700; font-size: 16px;
-    cursor: pointer; text-decoration: none;
-  }
-  .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
-  .btns { display: flex; flex-wrap: wrap; gap: 12px; }
-  ol { padding-left: 20px; margin: 10px 0 0; }
-  li { margin-bottom: 6px; }
-  .note {
-    background: var(--accent-dark); border-left: 3px solid var(--accent);
-    padding: 10px 14px; border-radius: 6px; font-size: 14px; margin-top: 14px;
-  }
-  .warn { color: #ffcf5a; }
-  pre {
-    background: #0e1410; border: 1px solid var(--line); border-radius: 6px;
-    padding: 12px; white-space: pre-wrap; font-size: 13px; color: var(--muted);
-    max-height: 260px; overflow: auto; margin: 0;
-  }
-  a { color: var(--accent); }
-  esp-web-install-button:not(:defined) span[slot] { display: none; }
-  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 28px; }
-</style>
+  <link rel="icon" href="https://raw.githubusercontent.com/mindburners/Teensy-Loader-MINDBURNER/main/favicon.png">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KLAK — Firmware Installer</title>
+  <script type="module" src="https://unpkg.com/esp-web-tools@9/dist/web/install-button.js?module"></script>
+  
+  <style>
+    body {
+      font-family: -apple-system, Segoe UI, Helvetica, Arial, sans-serif;
+      max-width: 520px;
+      margin: 60px auto;
+      text-align: center;
+      color: #eee;
+      background: #0c0c0c;
+      padding: 0 20px 50px;
+      line-height: 1.5;
+    }
+    img.logo {
+      width: 140px;
+      margin: 20px 0 10px;
+    }
+    h1 { 
+      font-size: 1.5em; 
+      margin-bottom: 0.2em; 
+    }
+    .sub { 
+      color: #aaa; 
+      margin-bottom: 25px; 
+      font-size: 1.15em;
+    }
+    ol { 
+      text-align: left; 
+      color: #ccc; 
+      max-width: 420px;
+      margin: 0 auto 30px;
+      padding-left: 20px;
+    }
+    .changelog {
+      text-align: left;
+      max-width: 420px;
+      margin: 40px auto;
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #333;
+    }
+    .changelog h3 {
+      margin-top: 0;
+      color: #ffcc00;
+    }
+    .changelog ul {
+      padding-left: 20px;
+      text-align: left;
+    }
+    esp-web-install-button {
+      display: block;
+      margin: 30px auto;
+    }
+    .keep {
+      text-align: left;
+      max-width: 420px;
+      margin: 0 auto 10px;
+      background: #1f1508;
+      border: 1px solid #5a3c10;
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: #e8c98a;
+      font-size: 0.92em;
+    }
+    .docs a {
+      color: #ffcc00;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    .browser-note {
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #666;
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
+  <img class="logo" src="logo.png" alt="Logo">
 
-  <header>
-    <div class="brand">Mindburner MIDI Products</div>
-    <h1>KLAK</h1>
-    <p class="tag">MIDI drum synth module &middot; firmware, user manual and quick start</p>
-  </header>
+  <h1>KLAK</h1>
+  <p class="sub" style="margin-top:-8px;font-size:0.95em">Drum synthesiser MIDI module</p>
+  <p class="sub">Firmware Installer — <strong id="version-display">Loading...</strong></p>
 
-  <section class="card">
-    <h2>Update firmware</h2>
-    <div class="version">Latest firmware: <b id="ver">loading&hellip;</b></div>
+  <ol>
+    <li>Connect your device via a USB DATA CABLE</li>
+    <li>Click the button below</li>
+    <li>Select the correct COM port and click <strong>Install</strong></li>
+  </ol>
 
-    <esp-web-install-button manifest="manifest.json">
-      <button slot="activate">Install / Update KLAK</button>
-      <span slot="unsupported" class="warn">
-        Your browser can't flash firmware. Please use <b>Chrome</b> or <b>Edge</b> on a computer.
-      </span>
-      <span slot="not-allowed" class="warn">
-        This page must be opened over https (it is on GitHub Pages).
-      </span>
-    </esp-web-install-button>
+  <div class="keep">
+    <strong>Your sounds are kept.</strong> Updating keeps your saved patches, sequencer patterns,
+    MIDI channel and tuning. New factory sounds are added to the slots that need them.
+  </div>
 
-    <ol>
-      <li>Connect KLAK to your computer with a USB <b>data</b> cable (not a charge-only cable).</li>
-      <li>Click <b>Install / Update KLAK</b> and pick the serial port that appears.</li>
-      <li>Click <b>Install</b> and wait until it says the installation is complete.</li>
-      <li>Unplug and reconnect KLAK. The new version shows on the startup screen.</li>
-    </ol>
+  <esp-web-install-button 
+    manifest="manifest.json">
+  </esp-web-install-button>
 
-    <div class="note">
-      <b>No port showing?</b> Your computer may need a USB driver. Install the
-      <a href="https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers" target="_blank" rel="noopener">CP210x driver</a>
-      or the
-      <a href="https://www.wch-ic.com/downloads/CH341SER_ZIP.html" target="_blank" rel="noopener">CH340 driver</a>
-      (newer boards), then try again.
-    </div>
-  </section>
+  <p class="docs">
+    <a href="KLAK_User_Manual.pdf">User manual (PDF)</a>
+    <a href="KLAK_Quick_Start.pdf">Quick start (PDF)</a>
+  </p>
 
-  <section class="card">
-    <h2>Guides</h2>
-    <div class="btns">
-      <a class="btn" href="KLAK_User_Manual.pdf" target="_blank">User Manual (PDF)</a>
-      <a class="btn ghost" href="KLAK_Quick_Start.pdf" target="_blank">Quick Start (PDF)</a>
-    </div>
-  </section>
+  <!-- Changelog Section -->
+  <div class="changelog">
+    <h3>What's New</h3>
+    <ul id="changelog-list">
+      <!-- Filled in automatically from changelog.txt -->
+    </ul>
+  </div>
 
-  <section class="card">
-    <h2>What's new</h2>
-    <pre id="log">Loading changelog&hellip;</pre>
-  </section>
+  <p class="browser-note">
+    Best used in Chrome / Edge<br>
+    <small>Version and What's New are loaded automatically from changelog.txt</small>
+  </p>
 
-  <footer>
-    Hand-built in Belfast &middot; <a href="https://www.mindburner.co.uk" target="_blank" rel="noopener">www.mindburner.co.uk</a>
-  </footer>
-</div>
-
-<script>
-  // Version and changelog come from changelog.txt - the first line is the version.
-  fetch('changelog.txt', { cache: 'no-store' })
-    .then(r => r.ok ? r.text() : Promise.reject())
-    .then(txt => {
-      document.getElementById('log').textContent = txt.trim();
-      const first = txt.split(/\r?\n/).find(l => l.trim().length);
-      const m = first && first.match(/v?\d+(\.\d+)+/i);
-      document.getElementById('ver').textContent = m ? m[0] : (first || 'unknown');
-    })
-    .catch(() => {
-      document.getElementById('ver').textContent = 'unknown';
-      document.getElementById('log').textContent = 'Changelog not available.';
-    });
-</script>
+  <script>
+    // Everything version-related comes from changelog.txt (newest line first: "1.4 - notes").
+    // The installer manifest is built here too, so manifest.json never needs editing.
+    async function setup() {
+      const verEl  = document.getElementById('version-display');
+      const listEl = document.getElementById('changelog-list');
+      const btn    = document.querySelector('esp-web-install-button');
+      try {
+        const res  = await fetch(`changelog.txt?ts=${Date.now()}`);
+        const text = await res.text();
+        const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length);
+        listEl.innerHTML = '';
+        let latest = null;
+        for (const line of lines) {
+          const m = line.match(/^v?([0-9][0-9A-Za-z.]*)\s*[-–:]\s*(.*)$/);
+          const li = document.createElement('li');
+          if (m) {
+            if (!latest) latest = m[1];
+            const b = document.createElement('strong'); b.textContent = m[1];
+            li.appendChild(b); li.appendChild(document.createTextNode(' - ' + m[2]));
+          } else {
+            li.textContent = line;
+          }
+          listEl.appendChild(li);
+        }
+        verEl.textContent = latest ? `Version ${latest}` : 'Latest Version';
+        if (latest) {
+          const base = new URL('./', location.href).href;
+          const manifest = {
+            name: document.title,
+            version: latest,
+            new_install_prompt_erase: false,
+            builds: [{
+              chipFamily: 'ESP32',
+              parts: [
+                { path: base + 'bootloader.bin', offset: 4096 },
+                { path: base + 'partitions.bin', offset: 32768 },
+                { path: base + 'firmware.bin',   offset: 65536 }
+              ]
+            }]
+          };
+          const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+          btn.setAttribute('manifest', URL.createObjectURL(blob));
+        }
+      } catch (err) {
+        verEl.textContent = 'Latest Version';        // falls back to manifest.json
+      }
+    }
+    window.addEventListener('load', setup);
+  </script>
 </body>
 </html>
