@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KLAK Firmware & Guides | Mindburner</title>
+<script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+<style>
+  :root {
+    --bg: #0b0f0c;
+    --panel: #141b16;
+    --line: #24302a;
+    --text: #e6efe8;
+    --muted: #9aaba0;
+    --accent: #39ff88;
+    --accent-dark: #0b3d22;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 32px 16px 48px; }
+  header { text-align: center; margin-bottom: 28px; }
+  .brand { color: var(--muted); letter-spacing: .2em; font-size: 12px; text-transform: uppercase; }
+  h1 {
+    font-size: 64px; margin: 6px 0 4px; letter-spacing: .08em;
+    color: var(--accent); text-shadow: 0 0 18px rgba(57,255,136,.35);
+  }
+  .tag { color: var(--muted); margin: 0; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 22px; margin-bottom: 18px;
+  }
+  h2 { margin: 0 0 12px; font-size: 20px; color: var(--accent); }
+  .version { font-size: 15px; color: var(--muted); margin-bottom: 16px; }
+  .version b { color: var(--text); }
+  esp-web-install-button button, .btn {
+    display: inline-block; background: var(--accent); color: #04140a; border: 0;
+    border-radius: 8px; padding: 12px 22px; font-weight: 700; font-size: 16px;
+    cursor: pointer; text-decoration: none;
+  }
+  .btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .btns { display: flex; flex-wrap: wrap; gap: 12px; }
+  ol { padding-left: 20px; margin: 10px 0 0; }
+  li { margin-bottom: 6px; }
+  .note {
+    background: var(--accent-dark); border-left: 3px solid var(--accent);
+    padding: 10px 14px; border-radius: 6px; font-size: 14px; margin-top: 14px;
+  }
+  .warn { color: #ffcf5a; }
+  pre {
+    background: #0e1410; border: 1px solid var(--line); border-radius: 6px;
+    padding: 12px; white-space: pre-wrap; font-size: 13px; color: var(--muted);
+    max-height: 260px; overflow: auto; margin: 0;
+  }
+  a { color: var(--accent); }
+  esp-web-install-button:not(:defined) span[slot] { display: none; }
+  footer { text-align: center; color: var(--muted); font-size: 13px; margin-top: 28px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">Mindburner MIDI Products</div>
+    <h1>KLAK</h1>
+    <p class="tag">MIDI drum synth module &middot; firmware, user manual and quick start</p>
+  </header>
+
+  <section class="card">
+    <h2>Update firmware</h2>
+    <div class="version">Latest firmware: <b id="ver">loading&hellip;</b></div>
+
+    <esp-web-install-button manifest="manifest.json">
+      <button slot="activate">Install / Update KLAK</button>
+      <span slot="unsupported" class="warn">
+        Your browser can't flash firmware. Please use <b>Chrome</b> or <b>Edge</b> on a computer.
+      </span>
+      <span slot="not-allowed" class="warn">
+        This page must be opened over https (it is on GitHub Pages).
+      </span>
+    </esp-web-install-button>
+
+    <ol>
+      <li>Connect KLAK to your computer with a USB <b>data</b> cable (not a charge-only cable).</li>
+      <li>Click <b>Install / Update KLAK</b> and pick the serial port that appears.</li>
+      <li>Click <b>Install</b> and wait until it says the installation is complete.</li>
+      <li>Unplug and reconnect KLAK. The new version shows on the startup screen.</li>
+    </ol>
+
+    <div class="note">
+      <b>No port showing?</b> Your computer may need a USB driver. Install the
+      <a href="https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers" target="_blank" rel="noopener">CP210x driver</a>
+      or the
+      <a href="https://www.wch-ic.com/downloads/CH341SER_ZIP.html" target="_blank" rel="noopener">CH340 driver</a>
+      (newer boards), then try again.
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Guides</h2>
+    <div class="btns">
+      <a class="btn" href="KLAK_User_Manual.pdf" target="_blank">User Manual (PDF)</a>
+      <a class="btn ghost" href="KLAK_Quick_Start.pdf" target="_blank">Quick Start (PDF)</a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>What's new</h2>
+    <pre id="log">Loading changelog&hellip;</pre>
+  </section>
+
+  <footer>
+    Hand-built in Belfast &middot; <a href="https://www.mindburner.co.uk" target="_blank" rel="noopener">www.mindburner.co.uk</a>
+  </footer>
+</div>
+
+<script>
+  // Version and changelog come from changelog.txt - the first line is the version.
+  fetch('changelog.txt', { cache: 'no-store' })
+    .then(r => r.ok ? r.text() : Promise.reject())
+    .then(txt => {
+      document.getElementById('log').textContent = txt.trim();
+      const first = txt.split(/\r?\n/).find(l => l.trim().length);
+      const m = first && first.match(/v?\d+(\.\d+)+/i);
+      document.getElementById('ver').textContent = m ? m[0] : (first || 'unknown');
+    })
+    .catch(() => {
+      document.getElementById('ver').textContent = 'unknown';
+      document.getElementById('log').textContent = 'Changelog not available.';
+    });
+</script>
+</body>
+</html>
