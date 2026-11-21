@@ -1,2 +1,2 @@
-v0.6
-- Current release.
+v0.12 - Name your kits when you save them
+v0.11.7 - Initial release
